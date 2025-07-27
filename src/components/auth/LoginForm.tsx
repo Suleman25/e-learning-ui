@@ -10,7 +10,7 @@ import { Eye, EyeOff, GraduationCap } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState<LoginCredentials>({
-    username: '',
+    usernameOrEmail: '',
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -60,14 +60,14 @@ const LoginForm: React.FC = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="usernameOrEmail">Username or Email</Label>
               <Input
-                id="username"
+                id="usernameOrEmail"
                 type="text"
-                value={credentials.username}
-                onChange={handleChange('username')}
+                value={credentials.usernameOrEmail}
+                onChange={handleChange('usernameOrEmail')}
                 required
-                placeholder="Enter your username"
+                placeholder="Enter your username or email"
                 className="transition-[var(--transition-fast)]"
               />
             </div>

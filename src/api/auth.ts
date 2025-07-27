@@ -13,7 +13,18 @@ interface RegisterResponse {
 
 export const authApi = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
-    const response = await apiClient.post('/token/', credentials);
+    // Determine if the input is an email (contains @ symbol)
+    const isEmail = credentials.usernameOrEmail.includes('@');
+    
+    // Format credentials for the backend based on whether it's email or username
+    const backendCredentials = {
+      password: credentials.password,
+      ...(isEmail 
+        ? { email: credentials.usernameOrEmail } 
+        : { username: credentials.usernameOrEmail })
+    };
+    
+    const response = await apiClient.post('/token/', backendCredentials);
     const tokens = response.data;
     
     // Fetch user profile after getting tokens
