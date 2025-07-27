@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AuthTokens } from '@/types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create axios instance
 export const apiClient = axios.create({
@@ -37,6 +37,14 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Create a separate instance for token refresh to avoid circular references
+const tokenRefreshClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 // Response interceptor to handle token refresh
 apiClient.interceptors.response.use(
   (response) => response,
@@ -49,7 +57,7 @@ apiClient.interceptors.response.use(
       const tokens = getTokens();
       if (tokens?.refresh) {
         try {
-          const response = await axios.post(`${API_BASE_URL}/token/refresh/`, {
+          const response = await tokenRefreshClient.post('/token/refresh/', {
             refresh: tokens.refresh,
           });
           
